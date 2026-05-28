@@ -1,0 +1,100 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "skillrank",
+  "colors": {
+    "primary": "#7C3AED",
+    "light": "#A78BFA",
+    "dark": "#5B21B6"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Commands",
+            "pages": [
+              "commands/install",
+              "commands/bench",
+              "commands/sync",
+              "commands/create",
+              "commands/publish",
+              "commands/list",
+              "commands/score"
+            ]
+          },
+          {
+            "group": "Stacks",
+            "pages": [
+              "stacks/yaml-reference",
+              "stacks/creating-a-stack",
+              "stacks/publishing"
+            ]
+          },
+          {
+            "group": "Bench",
+            "pages": [
+              "bench/how-it-works",
+              "bench/scorecard",
+              "bench/costs"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/from-npx-skills",
+              "guides/ci-integration"
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "GitHub",
+          "href": "https://github.com/darcy2002/SkillRank",
+          "icon": "github"
+        },
+        {
+          "anchor": "npm",
+          "href": "https://www.npmjs.com/package/skillrank",
+          "icon": "npm"
+        }
+      ]
+    }
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Issues",
+        "href": "https://github.com/darcy2002/SkillRank/issues"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get Started",
+      "href": "/quickstart"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/darcy2002/SkillRank",
+      "x": "https://x.com/darcy2002"
+    }
+  }
+}

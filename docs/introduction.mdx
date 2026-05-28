@@ -1,0 +1,86 @@
+---
+title: "skillrank"
+description: "The quality layer for AI agent skills. Test, bundle, and sync skills across every coding agent."
+---
+
+<img
+  className="block dark:hidden"
+  src="/images/hero-light.png"
+  alt="skillrank hero"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/hero-dark.png"
+  alt="skillrank hero"
+/>
+
+**skillrank** is a CLI tool that adds three layers on top of the open agent skills ecosystem:
+
+- **Stacks** — Curated, shareable bundles of skills installed with one command
+- **Bench** — Automated quality scoring for every skill you install
+- **Sync** — Cross-agent audit and reconciliation across Claude Code, Cursor, Codex, and more
+
+```bash
+npx skillrank bench
+```
+
+## Why skillrank?
+
+The agent skills ecosystem exploded in 2026 — 26+ platforms adopted the open SKILL.md standard, and thousands of skills now exist. But three problems plague developers using them:
+
+<CardGroup cols={3}>
+  <Card title="No bundles" icon="box">
+    Installing 8 skills takes 8 separate commands. No way to share a curated set.
+  </Card>
+  <Card title="Zero quality signals" icon="circle-question">
+    Thousands of skills published — no way to know which actually help vs. break.
+  </Card>
+  <Card title="Agent fragmentation" icon="shuffle">
+    Skills installed in Claude Code but not Cursor. Different versions everywhere.
+  </Card>
+</CardGroup>
+
+## Quick start
+
+<Steps>
+  <Step title="Install">
+    ```bash
+    npm install -g skillrank
+    ```
+  </Step>
+  <Step title="Set your API key">
+    ```bash
+    export ANTHROPIC_API_KEY="sk-ant-..."
+    ```
+    Required only for bench. Other commands work without it.
+  </Step>
+  <Step title="Benchmark your skills">
+    ```bash
+    skillrank bench
+    ```
+    See the [quickstart guide](/quickstart) for the full tour.
+  </Step>
+</Steps>
+
+## What can you do?
+
+<CardGroup cols={2}>
+  <Card title="Install a stack" icon="download" href="/commands/install">
+    Install a curated bundle of skills from any GitHub repo.
+  </Card>
+  <Card title="Benchmark skills" icon="chart-bar" href="/commands/bench">
+    Score installed skills 0-100 using Claude as a blind judge.
+  </Card>
+  <Card title="Sync across agents" icon="arrows-rotate" href="/commands/sync">
+    Find and fix skill mismatches across all your coding agents.
+  </Card>
+  <Card title="Create your own stack" icon="plus" href="/commands/create">
+    Build a shareable stack interactively.
+  </Card>
+</CardGroup>
+
+## Built for the open standard
+
+skillrank is built on the agent skills open standard ([agentskills.io](https://agentskills.io)) and works with every compliant tool — Claude Code, Codex, Cursor, GitHub Copilot, Gemini CLI, Windsurf, Kiro, OpenCode, Roo, Amp, and more.
+
+We don't reinvent install logic — we shell out to [`npx skills`](https://github.com/vercel-labs/agent-skills) for that. We focus on the layers that don't exist yet: quality, composition, and cross-agent reconciliation.

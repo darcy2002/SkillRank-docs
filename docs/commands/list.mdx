@@ -1,0 +1,77 @@
+---
+title: "list"
+description: "Show installed agents and their skills."
+---
+
+```bash
+skillrank list [options]
+skillrank ls [options]
+```
+
+Scans your machine for installed coding agents and lists them, optionally with all their skills.
+
+## Usage
+
+### Just show detected agents
+
+```bash
+skillrank list
+```
+
+```
+Detected agents
+  [claude-code]  5 skill(s)
+  [cursor]       3 skill(s)
+  [codex]        7 skill(s)
+```
+
+### Show all skills per agent
+
+```bash
+skillrank list --agents
+```
+
+```
+Detected agents
+  [claude-code]  5 skill(s)
+    • frontend-design — Create polished UI components for the web
+    • api-testing — Write tests using Jest and Supertest
+    • docx — Create and edit Word documents
+    • pdf — Generate and fill PDF files
+    • react-best-practices — Modern React patterns
+
+  [cursor]  3 skill(s)
+    • frontend-design — Create polished UI components for the web
+    • react-best-practices — Modern React patterns
+    • typescript-strict — Strict TypeScript configuration
+```
+
+## Options
+
+<ParamField path="--agents">
+  Group output by agent and show every installed skill.
+</ParamField>
+
+## What gets detected
+
+skillrank checks these paths:
+
+| Agent | Path checked |
+|---|---|
+| Claude Code | `~/.claude/skills/` |
+| Codex | `~/.codex/skills/`, `~/.agents/skills/` |
+| Cursor | `.cursor/skills/` (project-local) |
+| GitHub Copilot | `.github/skills/` (project-local) |
+| Gemini CLI | `~/.gemini/skills/` |
+| Windsurf | `.windsurf/rules/` (project-local) |
+| Kiro | `~/.kiro/skills/` |
+| OpenCode | `~/.agents/skills/` |
+| Roo | `.roo/skills/` |
+| Amp | `.amp/skills/` |
+
+A skill is detected if its folder contains a `SKILL.md` file.
+
+## Related
+
+- [`skillrank sync`](/commands/sync) — Audit and fix mismatches across agents
+- [`skillrank bench`](/commands/bench) — Score installed skill quality

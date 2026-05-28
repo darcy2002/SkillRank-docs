@@ -1,0 +1,146 @@
+---
+title: "Reading the Scorecard"
+description: "How to interpret bench results and act on them."
+---
+
+A bench scorecard looks like this:
+
+```
+Skill                Score    Δ vs raw   Status
+─────────────────────────────────────────────────
+frontend-design      92/100   +41        ✅ Strong
+react-best-practices 78/100   +22        ✅ Good
+api-testing          54/100   +8         ⚠️  Weak
+old-webpack-config   31/100   -2         ❌ Broken
+─────────────────────────────────────────────────
+Model: claude-sonnet-4-6   Tokens: 48,200   Est. cost: $0.14
+```
+
+Four columns. Three of them really matter.
+
+## Score
+
+The absolute quality score (0-100) when the skill is active. Calculated as the average across all generated test prompts.
+
+| Range | What it means |
+|---|---|
+| 80-100 | Strong — skill produces high-quality output |
+| 60-80 | Good — skill helps, but has room to tighten |
+| 40-60 | Weak — skill barely improves things |
+| 0-40 | Broken — skill is hurting or doing nothing |
+
+**Don't overweight score on its own.** A 75 in a complex domain might be a great skill. A 75 in a simple domain might be mediocre. Always read it alongside delta.
+
+## Δ vs raw (delta)
+
+**The most important number.** It's `score_with_skill - score_without_skill`.
+
+| Delta | Interpretation |
+|---|---|
+| +30 or more | Skill is genuinely transformative |
+| +10 to +30 | Skill adds clear value |
+| +5 to +10 | Skill helps marginally |
+| 0 to +5 | Skill might as well not be there |
+| Negative | Skill is making output worse — remove it |
+
+A skill scoring 95 with delta +2 is doing nothing. A skill scoring 75 with delta +45 is gold.
+
+## Status
+
+A friendly label that combines score and delta.
+
+| Status | Criteria | Action |
+|---|---|---|
+| ✅ Strong | Score 80+, delta +20+ | Keep, recommend to others |
+| ✅ Good | Score 60+, delta +10+ | Keep |
+| ⚠️ Weak | Score 40+ but low delta | Improve the description, re-bench |
+| ❌ Broken | Score under 40 or negative delta | Remove from your installed skills |
+
+## What to do with the results
+
+### Strong skills
+
+Promote them. Include them in stacks you publish. Share screenshots on Twitter. These are the skills worth recommending.
+
+### Good skills
+
+Keep using them. Maybe revisit the description in a few months to see if you can push the score higher.
+
+### Weak skills
+
+Usually fixable. The fix is almost always **the description**:
+
+1. Make it more specific about when the skill applies
+2. Add concrete trigger words developers would actually use
+3. Mention the technologies/frameworks by name
+4. Re-bench
+
+Example transformation:
+
+```yaml
+# Weak (score 54)
+description: Tests skill
+
+# Strong (score 88)
+description: Write API integration tests using Jest and Supertest for Node.js Express applications. Covers test setup, mocking dependencies, assertion patterns, and CI integration.
+```
+
+### Broken skills
+
+Remove them. They're either outdated, conflicting with other skills, or just badly written.
+
+```bash
+# Find the skill directory
+skillrank list --agents | grep <broken-skill>
+
+# Delete it
+rm -rf ~/.agents/skills/<broken-skill>
+```
+
+## Conflicts section
+
+Below the scorecard, you might see:
+
+```
+⚠ Conflicts detected:
+  → frontend-design & react-best-practices both trigger on:
+    "react", "component", "build", "design"
+```
+
+Two skills with overlapping keywords confuse the agent — it might activate one when you wanted the other. Fix by:
+
+1. **Removing one** if they overlap functionally
+2. **Rewriting descriptions** to be distinct (one focuses on "Material UI", the other on "Chakra UI", etc.)
+3. **Merging them** into one comprehensive skill
+
+## Stability
+
+Re-running bench gives slightly different scores each time. With `temperature: 0` and randomized A/B order, expect:
+
+- **±2 points** for stable skills (well-described, narrow domain)
+- **±5 points** for vague or broad skills
+- **±10+ points** for skills with very generic descriptions (this is a signal — the description needs work)
+
+If your scores swing widely, the skill description is the problem, not the bench.
+
+## Sharing your results
+
+The `--md` flag generates a `bench-report.md`:
+
+```bash
+skillrank bench --md
+```
+
+It's designed to be screenshot-friendly. Post it on Twitter with the install command:
+
+> Just ran skillrank bench on my agent skills. The good, the bad, and the broken:
+>
+> [screenshot]
+>
+> `npx skillrank bench` — try it on yours.
+
+## Related
+
+- [How bench works](/bench/how-it-works) — Technical pipeline
+- [Cost & performance](/bench/costs) — Pricing and optimization
+- [`skillrank score`](/commands/score) — Bench a single skill quickly

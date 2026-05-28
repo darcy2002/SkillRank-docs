@@ -1,0 +1,79 @@
+---
+title: "publish"
+description: "Push your stack to GitHub so others can install it."
+---
+
+```bash
+skillrank publish [options]
+```
+
+Initializes git (if needed), commits your `skillrank.yaml`, and pushes to a GitHub repo. Once published, anyone can install your stack with `skillrank install <user>/<stack>`.
+
+## Usage
+
+```bash
+skillrank publish
+```
+
+The command:
+
+<Steps>
+  <Step title="Validates skillrank.yaml">
+    Ensures your manifest exists and is valid.
+  </Step>
+  <Step title="Initializes git if needed">
+    Runs `git init` if you're not already in a repo.
+  </Step>
+  <Step title="Prompts for GitHub info">
+    Asks for your GitHub username if no remote is set.
+  </Step>
+  <Step title="Pauses for repo creation">
+    Tells you to create the repo on GitHub, then hit Enter to continue.
+  </Step>
+  <Step title="Commits and pushes">
+    Stages `skillrank.yaml`, `skillrank-lock.json`, and `README.md` (if present). Commits and pushes to `main`.
+  </Step>
+</Steps>
+
+## Options
+
+<ParamField path="--private">
+  Tells the user to create a private repo. Useful for internal team stacks.
+</ParamField>
+
+## After publishing
+
+Others can install your stack with one command:
+
+```bash
+skillrank install your-username/your-stack
+```
+
+## Pre-publish checklist
+
+Before publishing, make sure your stack:
+
+- [ ] Has a meaningful name (not "my-stack")
+- [ ] Includes a clear description
+- [ ] Has a README.md explaining the use case
+- [ ] Lists target agents explicitly
+- [ ] Has been tested with `skillrank install -f ./skillrank.yaml`
+
+<Tip>
+  For stacks meant for the public, also run `skillrank bench` on them and include the report in the README. Quality scores build trust.
+</Tip>
+
+## Authentication
+
+Publishing uses your existing git credentials. If you use SSH:
+
+```bash
+git remote set-url origin git@github.com:user/repo.git
+```
+
+If you use HTTPS, you'll need a [personal access token](https://github.com/settings/tokens) with `repo` scope.
+
+## Related
+
+- [`skillrank create`](/commands/create) — Build a stack before publishing
+- [Publishing best practices](/stacks/publishing) — Make your stack discoverable

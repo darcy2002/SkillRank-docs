@@ -1,0 +1,144 @@
+---
+title: "Creating a Stack"
+description: "Build, test, and publish your first skillrank."
+---
+
+This guide walks you through creating a stack from scratch, testing it, and publishing it for others to use.
+
+## 1. Plan your stack
+
+Before writing anything, answer:
+
+- **Who is this for?** (e.g., "Next.js developers")
+- **What workflow does it support?** (e.g., "shipping full-stack features fast")
+- **Which skills are core?** (Aim for 5-10 skills — focused is better than comprehensive.)
+
+A focused 5-skill stack beats a 50-skill kitchen sink.
+
+## 2. Use the wizard
+
+```bash
+mkdir my-stack && cd my-stack
+skillrank create
+```
+
+The wizard handles the boilerplate. You'll get a `skillrank.yaml` like:
+
+```yaml
+name: my-stack
+author: deepak
+description: My curated stack
+agents:
+  - claude-code
+  - cursor
+skills:
+  - source: vercel-labs/agent-skills
+    skill: frontend-design
+```
+
+Hand-edit to add more skills if needed. See [skillrank.yaml reference](/stacks/yaml-reference).
+
+## 3. Test locally
+
+Install your stack against your own setup to verify everything resolves:
+
+```bash
+skillrank install -f ./skillrank.yaml
+```
+
+If any skill fails to install, fix the `source` or `skill` name and re-run.
+
+## 4. Benchmark it
+
+This is what sets a great stack apart. Run bench to verify your curated skills actually help:
+
+```bash
+skillrank bench --md
+```
+
+Review `bench-report.md`. If any skill scores under 50 or has a negative delta, remove it from the stack. **Quality beats quantity.**
+
+## 5. Write a README
+
+Your stack's README is the sales pitch. Include:
+
+```markdown
+# my-stack
+
+[brief description]
+
+## What's included
+
+- **frontend-design** — Polished UI components
+- **react-best-practices** — Modern React patterns
+- ...
+
+## Install
+
+\`\`\`bash
+skillrank install your-username/my-stack
+\`\`\`
+
+## Bench results
+
+| Skill | Score | Δ |
+|---|---|---|
+| frontend-design | 92/100 | +41 |
+
+Generated with `skillrank bench`.
+
+## License
+
+MIT
+```
+
+## 6. Publish
+
+```bash
+skillrank publish
+```
+
+The command prompts you to create a GitHub repo, then pushes everything. Once done:
+
+```bash
+# Anyone can install your stack
+npx skillrank install your-username/my-stack
+```
+
+## 7. Promote
+
+- Post the bench report screenshot on Twitter / X
+- Share in `r/ClaudeAI`, `r/cursor`, dev communities
+- Submit to the [agentskills.io](https://agentskills.io) community list
+- Add to `awesome-claude-code` and similar lists
+
+## Best practices
+
+<AccordionGroup>
+  <Accordion title="Keep it focused">
+    A 5-skill stack for one workflow beats a 50-skill stack for everything. Specialized stacks get installed; generic ones don't.
+  </Accordion>
+  
+  <Accordion title="Pin your sources">
+    For production stacks, fork the source repos so skill content can't change underneath you. Update intentionally.
+  </Accordion>
+  
+  <Accordion title="Version your stack">
+    Tag releases (`v1.0.0`, `v1.1.0`) so users can pin: `skillrank install user/stack@v1.0.0`.
+  </Accordion>
+  
+  <Accordion title="Include the bench report">
+    Run `skillrank bench --md` and commit the report. Users trust stacks with proven quality scores.
+  </Accordion>
+</AccordionGroup>
+
+## Examples
+
+<CardGroup cols={2}>
+  <Card title="darcy2002/nextjs-starter" icon="github" href="https://github.com/darcy2002/nextjs-starter">
+    Full-stack Next.js with Tailwind and Prisma.
+  </Card>
+  <Card title="darcy2002/python-backend" icon="github" href="https://github.com/darcy2002/python-backend">
+    FastAPI + SQLAlchemy + pytest essentials.
+  </Card>
+</CardGroup>

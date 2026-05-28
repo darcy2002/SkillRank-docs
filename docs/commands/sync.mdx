@@ -1,0 +1,88 @@
+---
+title: "sync"
+description: "Audit and reconcile skills across all detected coding agents."
+---
+
+```bash
+skillrank sync [options]
+```
+
+Builds a cross-agent skill inventory, shows what's installed where, and helps you reconcile mismatches.
+
+## Usage
+
+### Show diff without changes
+
+```bash
+skillrank sync --dry-run
+```
+
+### Interactive reconciliation
+
+```bash
+skillrank sync
+```
+
+Walks you through fixing each mismatch.
+
+## Options
+
+<ParamField path="--dry-run">
+  Show the diff matrix without making any changes.
+</ParamField>
+
+<ParamField path="-a, --agent <agents...>">
+  Limit sync to specific agents only.
+</ParamField>
+
+## How it works
+
+<Steps>
+  <Step title="Detect agents">
+    Scans your filesystem for installed coding agents and their skill directories.
+  </Step>
+  <Step title="Build inventory">
+    Reads every SKILL.md file across every agent. Builds a matrix of which skills exist where.
+  </Step>
+  <Step title="Compute diff">
+    For each skill, determines its status per agent:
+    - **synced** — Present with the same content hash
+    - **outdated** — Present but with a different hash
+    - **missing** — Not installed in this agent
+    - **only-here** — Only exists in one agent
+  </Step>
+  <Step title="Reconcile">
+    Interactively prompts you to fix mismatches. Copies SKILL.md files (or converts to `.mdc` for Cursor / `.md` for Windsurf) to fill gaps.
+  </Step>
+</Steps>
+
+## Sample output
+
+```
+┌──────────────────┬────────┬────────┬───────┐
+│ Skill            │ Claude │ Cursor │ Codex │
+├──────────────────┼────────┼────────┼───────┤
+│ frontend-design  │ ✔      │ ✔      │ ✔     │
+│ api-testing      │ ✔      │ ⚠      │ ✔     │
+│ docx             │ ✔      │ ✖      │ ✖     │
+└──────────────────┴────────┴────────┴───────┘
+  ✔ synced   ⚠ outdated   ✖ missing
+```
+
+In this example, `docx` only exists in Claude Code, and `api-testing` has an outdated version in Cursor.
+
+## Format conversion
+
+Most agents read native SKILL.md files. Two exceptions:
+
+| Agent | Format | Conversion |
+|---|---|---|
+| Cursor (`.cursor/rules/`) | `.mdc` | Frontmatter remapped to `description` + `alwaysApply: false` |
+| Windsurf (`.windsurf/rules/`) | `.md` | Frontmatter stripped, body kept as plain markdown |
+
+Sync handles these conversions automatically.
+
+## Related
+
+- [`skillrank list`](/commands/list) — Just see what's installed, no diff
+- [Multi-agent setup guide](/guides/from-npx-skills) — Best practices for using multiple agents

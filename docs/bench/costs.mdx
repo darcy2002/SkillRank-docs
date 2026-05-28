@@ -1,0 +1,133 @@
+---
+title: "Cost & Performance"
+description: "How much bench costs, how long it takes, and how to optimize both."
+---
+
+Bench is intentionally cheap. Here's exactly what you'll pay and what you'll wait for.
+
+## Cost breakdown
+
+Per skill, bench makes 10 API calls:
+
+| Step | API calls | Tokens (avg) |
+|---|---|---|
+| Task generation | 1 | ~800 |
+| Run WITH skill (×3) | 3 | ~3,000 each |
+| Run WITHOUT skill (×3) | 3 | ~1,500 each |
+| Grading (×3) | 3 | ~2,700 each |
+| **Per skill total** | **10** | **~21,000** |
+
+At Sonnet pricing (~$3/M input, $15/M output):
+
+| Skills | Calls | Tokens | Cost |
+|---|---|---|---|
+| 1 | 10 | ~21K | ~$0.02 |
+| 5 | 50 | ~105K | ~$0.10 |
+| 10 | 100 | ~210K | ~$0.20 |
+| 20 | 200 | ~420K | ~$0.40 |
+
+With your $5 free Anthropic credit, you can run bench on 10 skills about **25 times**.
+
+## Time
+
+Sequential execution is slow. With parallelization (dual runs happen at the same time):
+
+| Skills | Estimated time |
+|---|---|
+| 1 | ~15 seconds |
+| 5 | ~60-90 seconds |
+| 10 | ~2-3 minutes |
+| 20 | ~5-6 minutes |
+
+The bottleneck is API latency, not compute. Each API call is 1-3 seconds; many sequential calls add up.
+
+## Optimizations
+
+### Use Haiku for grading
+
+The grading step doesn't need Sonnet's depth — it's a comparison task. Switch to Haiku:
+
+```bash
+skillrank bench --grader-model claude-haiku-4-5-20251001
+```
+
+**Speedup: ~30%**. **Cost reduction: ~40%**.
+
+### Reduce tasks per skill
+
+Default is 3 test prompts per skill. For initial exploration, 1 is enough:
+
+```bash
+skillrank bench --tasks 1
+```
+
+**Speedup: ~3x**. **Cost reduction: ~3x**. Trade-off: less reliable scores (single prompt = single data point).
+
+### Bench only what changed
+
+If you're iterating on one skill, use `score` instead:
+
+```bash
+skillrank score frontend-design
+```
+
+Only that skill runs. Roughly 15 seconds and $0.02.
+
+### Skip already-strong skills
+
+In CI, only re-bench skills whose content hash changed:
+
+```bash
+# Pseudo-script — bench only modified skills
+git diff --name-only HEAD~1 -- '**/SKILL.md' | \
+  xargs -I {} skillrank score "$(dirname {} | xargs basename)"
+```
+
+## Rate limits
+
+The Anthropic API has rate limits per tier:
+
+| Tier | Requests/min |
+|---|---|
+| Tier 1 (free $5) | 5 RPM |
+| Tier 2 ($5+ deposited) | 50 RPM |
+| Tier 3 ($40+ deposited) | 1000 RPM |
+
+Bench respects rate limits by running calls sequentially within a skill (parallelizing only the dual with/without pair). If you're on Tier 1 with many skills, expect waits.
+
+To upgrade tiers, just add funds to your Anthropic account — even $5 of deposits unlocks Tier 2.
+
+## Model selection
+
+Default model is `claude-sonnet-4-6`. You can override:
+
+```bash
+# Cheaper and faster, slightly less rigorous
+skillrank bench --model claude-haiku-4-5-20251001
+
+# More expensive, marginally better scoring
+skillrank bench --model claude-opus-4-6
+```
+
+Recommendations:
+
+- **Iterating on a skill**: Haiku for both — fast feedback
+- **Auditing your full stack**: Sonnet for testing, Haiku for grading — balanced
+- **Publishing a stack publicly**: Sonnet for both — highest reliability
+
+## Comparing costs to alternatives
+
+| Tool | Cost per skill | Time per skill | Quality signal |
+|---|---|---|---|
+| skillrank bench | $0.02-$0.04 | ~15s | ✅ Quantitative |
+| Manual testing | Free | ~10 min | ⚠️ Subjective |
+| User reviews | Free | Days/weeks | ✅ Real-world |
+| No testing | Free | 0s | ❌ None |
+
+For the cost of a piece of gum per skill, you get a quantitative quality signal in seconds. That's the value prop.
+
+## Related
+
+- [How bench works](/bench/how-it-works) — Technical pipeline
+- [Reading the scorecard](/bench/scorecard) — Interpreting results
+- [`skillrank score`](/commands/score) — Single-skill bench for iteration

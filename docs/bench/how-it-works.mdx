@@ -1,0 +1,132 @@
+---
+title: "How Bench Works"
+description: "Deep dive into the bench pipeline and scoring methodology."
+---
+
+Bench is the feature that differentiates skillrank. This page explains exactly how it scores your skills — what's measured, how it's measured, and why it's trustworthy.
+
+## The pipeline
+
+```
+1. Scan installed skills
+2. Generate test prompts per skill
+3. Dual execution (with/without skill)
+4. Blind grading
+5. Compute delta and render scorecard
+```
+
+## Step 1: Scan
+
+skillrank walks your detected agent skill directories and parses every `SKILL.md` file. Same skill installed in multiple agents = one entry (deduplicated by name).
+
+For each skill, it extracts:
+- **Name** — from YAML frontmatter
+- **Description** — from YAML frontmatter
+- **Body** — the markdown instructions
+- **Content hash** — for change detection
+
+## Step 2: Generate test prompts
+
+For each skill, bench calls Claude API:
+
+> Given this skill's name and description, generate exactly N realistic user prompts that would trigger this skill. Each prompt should be a natural request a developer would make.
+
+For example, for a skill described as "Write API tests using Jest and Supertest":
+
+```
+Generated prompts:
+1. "Write tests for a user registration endpoint with validation"
+2. "Test a GET /api/posts endpoint that supports filtering by author"
+3. "Set up integration tests for an OAuth callback flow"
+```
+
+The quality of these prompts depends entirely on your skill's description. **Vague descriptions = vague tests = unreliable scores.**
+
+## Step 3: Dual execution
+
+For each generated prompt, bench makes two API calls **in parallel**:
+
+### Call A — WITH skill
+
+```json
+{
+  "system": "[FULL SKILL.md body injected here]",
+  "user": "Write tests for a user registration endpoint..."
+}
+```
+
+### Call B — WITHOUT skill
+
+```json
+{
+  "system": null,
+  "user": "Write tests for a user registration endpoint..."
+}
+```
+
+Both calls use `temperature: 0` for deterministic outputs. The same model is used for both to ensure fair comparison.
+
+## Step 4: Blind grading
+
+Both outputs are sent to Claude as a judge — but with a critical detail: **the order is randomized.**
+
+```json
+{
+  "system": "You are an expert judge. Score both outputs 0-100 on relevance, quality, and usefulness. Return JSON: { scoreA, scoreB, reasoning }",
+  "user": "Prompt: [original prompt]\n\n--- Output A ---\n[randomly chosen output]\n\n--- Output B ---\n[the other output]"
+}
+```
+
+The judge doesn't know which output had the skill. This eliminates position bias and ensures the score reflects actual quality, not just "the first one was probably the answer."
+
+After grading, the random A/B mapping is reversed to figure out which score belongs to "with skill" and which to "without skill."
+
+## Step 5: Compute and report
+
+For each skill:
+
+```
+score_with_skill = average of all "with skill" scores
+score_without = average of all "without skill" scores
+delta = score_with_skill - score_without
+```
+
+The final score in the report is `score_with_skill`. The delta is the most important number — it measures the skill's **incremental value**.
+
+## Why this methodology
+
+<AccordionGroup>
+  <Accordion title="Why not just check if the skill triggered?">
+    A skill could trigger but produce worse output (e.g., outdated instructions). Triggering isn't quality. We measure the actual output difference.
+  </Accordion>
+  
+  <Accordion title="Why blind grading?">
+    LLM judges have well-documented position bias and self-preference bias. Randomizing order + not telling the judge which output came from where eliminates these.
+  </Accordion>
+  
+  <Accordion title="Why Claude as judge?">
+    Same model family as the agent being tested. Claude reliably scores Claude outputs on coherence and correctness. Future versions may support multi-judge consensus.
+  </Accordion>
+  
+  <Accordion title="Why generate test prompts dynamically?">
+    Hand-curated test sets would require manual work per skill. Generated prompts adapt to each skill's domain automatically. The skill description IS the spec.
+  </Accordion>
+  
+  <Accordion title="Why temperature 0?">
+    Determinism. Same prompt = same output. This means re-running bench gives consistent scores (within ±2 points typically).
+  </Accordion>
+</AccordionGroup>
+
+## Limitations
+
+Bench is a useful signal, not absolute truth:
+
+- **Skill descriptions drive test quality.** A poorly described skill will be tested poorly.
+- **Scores are relative, not absolute.** A 90 doesn't mean "perfect" — it means "much better than no skill."
+- **Domain-specific skills score lower.** Highly specialized skills generate fewer realistic test prompts.
+- **Single judge model.** Future versions may support multi-judge consensus for higher reliability.
+
+## What's next
+
+- [Reading the scorecard](/bench/scorecard) — How to interpret results and act on them
+- [Cost & performance](/bench/costs) — How much bench costs and how to speed it up

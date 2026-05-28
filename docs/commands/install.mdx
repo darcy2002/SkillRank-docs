@@ -1,0 +1,98 @@
+---
+title: "install"
+description: "Install a curated bundle of skills from GitHub or a local skillrank.yaml."
+---
+
+```bash
+skillrank install [stack] [options]
+skillrank i [stack] [options]
+```
+
+## Usage
+
+### Install from GitHub
+
+```bash
+skillrank install user/repo
+```
+
+Fetches `skillrank.yaml` from the root of `github.com/user/repo` and installs all listed skills.
+
+### Install from a local file
+
+```bash
+skillrank install -f ./skillrank.yaml
+```
+
+### Restore from lock file
+
+```bash
+skillrank install
+```
+
+With no arguments, restores from the `skillrank-lock.json` in the current directory (similar to `npm install`).
+
+## Options
+
+<ParamField path="-f, --file <path>">
+  Path to a local `skillrank.yaml` file.
+</ParamField>
+
+<ParamField path="-a, --agent <agents...>">
+  Target specific agents instead of all detected ones. Example: `-a claude-code cursor`.
+</ParamField>
+
+<ParamField path="-y, --yes">
+  Skip confirmation prompts.
+</ParamField>
+
+## Examples
+
+Install a stack to all detected agents:
+
+```bash
+skillrank install darcy2002/nextjs-starter -y
+```
+
+Install only to Claude Code and Cursor:
+
+```bash
+skillrank install darcy2002/nextjs-starter -a claude-code cursor
+```
+
+## How it works
+
+skillrank doesn't reimplement skill installation — it shells out to [`npx skills`](https://www.npmjs.com/package/skills) for each skill in the stack. For each entry, it runs:
+
+```bash
+npx skills add <source> --skill <name> -a <agent> -y
+```
+
+After all installs complete, it writes a `skillrank-lock.json` recording exact versions for reproducibility.
+
+## Lock file
+
+The `skillrank-lock.json` looks like:
+
+```json
+{
+  "version": 1,
+  "stackName": "nextjs-starter",
+  "entries": [
+    {
+      "source": "vercel-labs/agent-skills",
+      "skill": "frontend-design",
+      "contentHash": "a3f8b2c1",
+      "installedAt": "2026-05-29T10:30:00Z"
+    }
+  ]
+}
+```
+
+Commit this file to your repo so teammates get the exact same skill versions.
+
+## Related
+
+- [`skillrank create`](/commands/create) — Build your own stack interactively
+- [`skillrank publish`](/commands/publish) — Push your stack to GitHub
+- [skillrank.yaml reference](/stacks/yaml-reference) — Full manifest schema

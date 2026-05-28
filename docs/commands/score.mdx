@@ -1,0 +1,78 @@
+---
+title: "score"
+description: "Quick benchmark a single installed skill."
+---
+
+```bash
+skillrank score <skill> [options]
+```
+
+Same pipeline as [`bench`](/commands/bench), but for one skill only. Faster, cheaper, useful for iterating on a skill you're developing.
+
+<Warning>
+  Requires `ANTHROPIC_API_KEY`. See [Installation](/installation#set-up-your-api-key).
+</Warning>
+
+## Usage
+
+```bash
+skillrank score frontend-design
+```
+
+Output:
+
+```
+⚡ skillrank  v0.1.0
+
+Scoring: frontend-design
+  ✔ Generated 3 task(s).
+  ✔ Ran 3 dual prompt(s).
+  ✔ Graded 3 result(s).
+
+Skill              Score    Δ vs raw   Status
+─────────────────────────────────────────────
+frontend-design    92/100   +41        ✅ Strong
+─────────────────────────────────────────────
+Tokens: 11,400  ·  Cost: ~$0.04
+```
+
+## Options
+
+<ParamField path="-m, --model <model>" default="claude-sonnet-4-6">
+  Claude model to use for skill execution.
+</ParamField>
+
+## When to use score vs bench
+
+| Use case | Command |
+|---|---|
+| Iterating on a skill you're writing | `score` |
+| Checking if a single skill is worth keeping | `score` |
+| Auditing all installed skills | `bench` |
+| Generating a shareable report | `bench --md` |
+
+## Tip: iterating on skill descriptions
+
+The skill description drives task generation, which drives scoring. If your skill has a vague description, the generated tasks will be vague too.
+
+Workflow:
+
+```bash
+# 1. Write your skill
+vim ~/.claude/skills/my-skill/SKILL.md
+
+# 2. Score it
+skillrank score my-skill
+
+# 3. Rewrite the description based on what tasks were generated
+
+# 4. Re-score
+skillrank score my-skill
+```
+
+Most skills go from a score in the 40s to 80+ after one or two description rewrites.
+
+## Related
+
+- [`skillrank bench`](/commands/bench) — Bench all installed skills at once
+- [Reading the scorecard](/bench/scorecard) — How to interpret scores

@@ -1,0 +1,136 @@
+---
+title: "skillrank.yaml Reference"
+description: "Full schema reference for the stack manifest file."
+---
+
+A `skillrank.yaml` defines a curated bundle of skills. Place it at the root of any GitHub repo to make it installable via `skillrank install user/repo`.
+
+## Full example
+
+```yaml
+name: nextjs-fullstack
+author: deepak
+version: "1.0.0"
+description: 8 battle-tested skills for full-stack Next.js development
+
+agents:
+  - claude-code
+  - cursor
+  - codex
+
+skills:
+  - source: vercel-labs/agent-skills
+    skill: frontend-design
+  - source: vercel-labs/agent-skills
+    skill: react-best-practices
+  - source: anthropics/skills
+    skill: docx
+  - source: deepak/custom-skills
+    skill: nextjs-api-routes
+
+bench:
+  tasks_per_skill: 3
+  model: claude-sonnet-4-6
+```
+
+## Fields
+
+### `name` <Tooltip tip="Required">*</Tooltip>
+
+The stack name. Used as the install identifier (`skillrank install user/<name>`). Use kebab-case.
+
+```yaml
+name: nextjs-fullstack
+```
+
+### `author` <Tooltip tip="Required">*</Tooltip>
+
+Your name or GitHub handle.
+
+```yaml
+author: deepak
+```
+
+### `description` <Tooltip tip="Required">*</Tooltip>
+
+One-line description shown in `skillrank list` and on the stack's GitHub page.
+
+```yaml
+description: 8 battle-tested skills for Next.js development
+```
+
+### `version`
+
+Semantic version. Used in lock files for upgrade detection.
+
+```yaml
+version: "1.0.0"
+```
+
+### `agents`
+
+Array of target agent names. If omitted, the stack installs to all detected agents.
+
+```yaml
+agents:
+  - claude-code
+  - cursor
+  - codex
+```
+
+Valid values: `claude-code`, `codex`, `cursor`, `copilot`, `gemini`, `windsurf`, `kiro`, `opencode`, `roo`, `amp`.
+
+### `skills` <Tooltip tip="Required">*</Tooltip>
+
+Array of skill entries. Each entry has:
+
+<ParamField path="source" required>
+  GitHub repo containing the skill (`owner/repo` format).
+</ParamField>
+
+<ParamField path="skill" required>
+  Skill name (folder name in the source repo).
+</ParamField>
+
+```yaml
+skills:
+  - source: vercel-labs/agent-skills
+    skill: frontend-design
+  - source: anthropics/skills
+    skill: docx
+```
+
+### `bench`
+
+Optional configuration for `skillrank bench` when run against this stack.
+
+<ParamField path="tasks_per_skill" default="3">
+  Number of test prompts to generate per skill. Range: 1-10.
+</ParamField>
+
+<ParamField path="model" default="claude-sonnet-4-6">
+  Claude model to use for benchmarking.
+</ParamField>
+
+```yaml
+bench:
+  tasks_per_skill: 5
+  model: claude-sonnet-4-6
+```
+
+## Validation
+
+skillrank validates manifests on install. Common errors:
+
+| Error | Cause |
+|---|---|
+| `"name" is required` | Missing top-level `name` field |
+| `"skills" must contain at least one entry` | Empty or missing `skills` array |
+| `Each skill must have a "source"` | Missing `source` field on a skill entry |
+| `Invalid agent: foo` | Unknown agent name in `agents` array |
+
+## Tips
+
+- **Use specific descriptions** — they're shown to users browsing stacks. "Next.js dev tools" is weak. "8 skills for full-stack Next.js with Tailwind, Prisma, and tRPC" is strong.
+- **Pin source repos** — for production stacks, fork the source repos so skill content doesn't change underneath you.
+- **Run bench before publishing** — include the bench report in your README to build trust.

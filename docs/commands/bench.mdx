@@ -1,0 +1,145 @@
+---
+title: "bench"
+description: "Benchmark installed skills — score quality, find conflicts, identify broken skills."
+---
+
+```bash
+skillrank bench [options]
+```
+
+The flagship feature. Tests every installed skill against synthetic prompts, scoring quality with Claude API as a blind judge.
+
+<Warning>
+  Requires `ANTHROPIC_API_KEY` to be set. See [Installation](/installation#set-up-your-api-key) for setup.
+</Warning>
+
+## Usage
+
+```bash
+skillrank bench
+```
+
+Sample output:
+
+```
+⚡ skillrank  v0.1.0
+✔ Found 3 installed skill(s).
+
+Benchmarking: frontend-design
+  ✔ Generated 3 task(s).
+  ✔ Ran 3 dual prompt(s).
+  ✔ Graded 3 result(s).
+
+Benchmarking: api-testing
+  ✔ Generated 3 task(s).
+  ✔ Ran 3 dual prompt(s).
+  ✔ Graded 3 result(s).
+
+Skill                Score    Δ vs raw   Status
+─────────────────────────────────────────────────
+frontend-design      92/100   +41        ✅ Strong
+api-testing          78/100   +22        ✅ Good
+─────────────────────────────────────────────────
+Model: claude-sonnet-4-6   Tokens: 32,400   Est. cost: $0.10
+```
+
+## Options
+
+<ParamField path="-s, --stack <path>">
+  Bench only skills in a specific `skillrank.yaml`, not all installed skills.
+</ParamField>
+
+<ParamField path="-m, --model <model>" default="claude-sonnet-4-6">
+  Claude model to use for skill execution.
+</ParamField>
+
+<ParamField path="-t, --tasks <n>" default="3">
+  Number of test prompts to generate per skill.
+</ParamField>
+
+<ParamField path="--json">
+  Output raw JSON instead of the terminal scorecard. Useful for piping to other tools.
+</ParamField>
+
+<ParamField path="--md">
+  Also write a `bench-report.md` file — designed to be shareable on GitHub or Twitter.
+</ParamField>
+
+## Output files
+
+Two artifacts are generated:
+
+### `bench-report.json`
+
+Full structured data — every prompt, every score, every reasoning string. Useful for tracking quality over time or building dashboards.
+
+```json
+{
+  "timestamp": "2026-05-29T10:30:00Z",
+  "model": "claude-sonnet-4-6",
+  "skills": [
+    {
+      "name": "frontend-design",
+      "score": 92,
+      "delta": 41,
+      "status": "strong",
+      "tasks": [...]
+    }
+  ],
+  "conflicts": [],
+  "totalTokens": 32400,
+  "estimatedCost": "$0.10"
+}
+```
+
+### `bench-report.md`
+
+Markdown table with emoji status indicators. Screenshot-friendly. Designed to be the viral artifact:
+
+```markdown
+# ⚡ skillrank bench report
+
+| Skill            | Score   | Δ    | Status     |
+|------------------|---------|------|------------|
+| frontend-design  | 92/100  | +41  | ✅ Strong  |
+| api-testing      | 78/100  | +22  | ✅ Good    |
+
+**Model:** claude-sonnet-4-6 · **Cost:** $0.10
+```
+
+## Reading the scorecard
+
+| Status | Meaning |
+|---|---|
+| ✅ Strong | Score 80+, big positive delta. Skill is genuinely useful. |
+| ✅ Good | Score 60-80, positive delta. Skill helps but could be tighter. |
+| ⚠️ Weak | Score 40-60, small or zero delta. Marginal value — consider revising. |
+| ❌ Broken | Score below 40 or negative delta. Skill is useless or harmful — remove it. |
+
+The **delta** is the most important number. It's `score_with_skill - score_without_skill`. A delta of `+41` means the skill genuinely improved the output. A delta of `-2` means it actively made things worse.
+
+## Conflicts
+
+Bench also detects keyword overlap between skills. If two skills have descriptions with >40% overlapping keywords, they'll both try to activate on the same prompts — causing the agent to choose one unpredictably.
+
+```
+⚠ Conflicts detected:
+  → frontend-design & react-best-practices both trigger on:
+    "react", "component", "build", "design"
+```
+
+Fix by either removing one or rewriting the descriptions to be more distinct.
+
+## Cost
+
+Benchmarking is intentionally cheap. Each skill costs roughly **$0.02-$0.04** using Sonnet, or $0.005 using Haiku.
+
+For 10 skills with default settings: ~$0.20.
+
+See [Cost & Performance](/bench/costs) for the full breakdown.
+
+## Related
+
+- [`skillrank score`](/commands/score) — Quick benchmark of a single skill
+- [How bench works](/bench/how-it-works) — Deep dive into the pipeline
+- [Reading the scorecard](/bench/scorecard) — How to interpret results

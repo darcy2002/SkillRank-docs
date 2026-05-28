@@ -1,0 +1,73 @@
+---
+title: "create"
+description: "Interactively build a new skillrank.yaml from your installed skills."
+---
+
+```bash
+skillrank create [options]
+```
+
+Interactive wizard for building a stack manifest. Walks you through naming, selecting skills, and picking target agents.
+
+## Usage
+
+```bash
+skillrank create
+```
+
+You'll be prompted through:
+
+<Steps>
+  <Step title="Stack name">
+    Default: current directory name.
+  </Step>
+  <Step title="Author">
+    Default: your `git config user.name`.
+  </Step>
+  <Step title="Description">
+    A one-line description of what this stack is for.
+  </Step>
+  <Step title="Target agents">
+    Multi-select from your detected agents.
+  </Step>
+  <Step title="Pick skills">
+    Multi-select from your installed skills.
+  </Step>
+  <Step title="Add remote skills (optional)">
+    Add skills from any GitHub repo by entering `owner/repo` and skill name.
+  </Step>
+</Steps>
+
+The result is a `skillrank.yaml` written to the current directory.
+
+## Options
+
+<ParamField path="-n, --name <name>">
+  Pre-fill the stack name.
+</ParamField>
+
+<ParamField path="-o, --output <path>" default="./skillrank.yaml">
+  Output path for the generated file.
+</ParamField>
+
+## Example session
+
+```
+✔ Stack name · my-nextjs-stack
+✔ Author · deepak
+✔ Description · 8 skills for full-stack Next.js development
+✔ Target agents (space to select) · claude-code, cursor
+✔ Pick installed skills to include …
+✔ frontend-design — Create polished UI components
+✔ react-best-practices — Modern React patterns
+✔ api-testing — Jest + Supertest test suites
+✔ Add skills from GitHub? · No
+
+✔ Stack written to ./skillrank.yaml
+ℹ Next: Run `skillrank publish` to share it on GitHub.
+```
+
+## Related
+
+- [`skillrank publish`](/commands/publish) — Push your stack to GitHub
+- [skillrank.yaml reference](/stacks/yaml-reference) — Full schema

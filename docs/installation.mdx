@@ -1,0 +1,118 @@
+---
+title: "Installation"
+description: "Get skillrank running in under a minute."
+---
+
+## Prerequisites
+
+- **Node.js 20+** — check with `node --version`
+- **At least one coding agent** with skill support (Claude Code, Cursor, Codex, etc.)
+- **Anthropic API key** — only required for `bench` and `score` commands
+
+## Install via npm
+
+<CodeGroup>
+
+```bash npm
+npm install -g skillrank
+```
+
+```bash yarn
+yarn global add skillrank
+```
+
+```bash pnpm
+pnpm add -g skillrank
+```
+
+```bash npx (no install)
+npx skillrank <command>
+```
+
+</CodeGroup>
+
+Verify the install:
+
+```bash
+skillrank --version
+# 0.1.0
+```
+
+## Set up your API key
+
+Only required for the `bench` and `score` commands. All other commands work without it.
+
+<Steps>
+  <Step title="Create an Anthropic account">
+    Sign up at [console.anthropic.com](https://console.anthropic.com). New accounts get $5 in free credits — enough for hundreds of bench runs.
+  </Step>
+  <Step title="Generate an API key">
+    Navigate to Settings → API Keys → Create Key.
+  </Step>
+  <Step title="Export the key">
+    ```bash
+    export ANTHROPIC_API_KEY="sk-ant-..."
+    ```
+    
+    To persist across sessions, add it to your shell config (`.bashrc`, `.zshrc`):
+    
+    ```bash
+    echo 'export ANTHROPIC_API_KEY="sk-ant-..."' >> ~/.zshrc
+    ```
+  </Step>
+</Steps>
+
+## Verify your setup
+
+```bash
+skillrank list --agents
+```
+
+If you have any coding agents installed, you'll see them listed:
+
+```
+Detected agents
+  [claude-code]  3 skill(s)
+  [cursor]       2 skill(s)
+  [codex]        5 skill(s)
+```
+
+If nothing shows up, check that your coding agent has at least one skill installed. See the [quickstart](/quickstart) for an example.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="No agents detected">
+    skillrank looks for known skill directories. Install at least one skill via `npx skills add` first, or create a skill manually:
+    
+    ```bash
+    mkdir -p ~/.agents/skills/my-skill
+    cat > ~/.agents/skills/my-skill/SKILL.md << 'EOF'
+    ---
+    name: my-skill
+    description: A test skill for verifying skillrank detection
+    ---
+    # My Skill
+    Instructions here...
+    EOF
+    ```
+  </Accordion>
+  
+  <Accordion title="Bench fails with 404 model error">
+    The default model is `claude-sonnet-4-6`. If your account doesn't have access to that model, override it:
+    
+    ```bash
+    skillrank bench --model claude-haiku-4-5-20251001
+    ```
+  </Accordion>
+  
+  <Accordion title="Permission denied on global install">
+    Either use `sudo`, or configure npm to use a user-owned global directory:
+    
+    ```bash
+    mkdir ~/.npm-global
+    npm config set prefix '~/.npm-global'
+    export PATH=~/.npm-global/bin:$PATH
+    ```
+  </Accordion>
+</AccordionGroup>

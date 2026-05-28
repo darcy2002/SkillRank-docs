@@ -1,0 +1,114 @@
+---
+title: "Migrating from npx skills"
+description: "Already using npx skills? skillrank adds quality scoring and bundles on top of it."
+---
+
+If you're already using [`npx skills`](https://github.com/vercel-labs/agent-skills), skillrank is purely additive. We use `npx skills` under the hood for installation — you don't lose anything.
+
+## What stays the same
+
+- `npx skills add user/repo --skill <name>` still works
+- All your existing skills remain installed
+- Same SKILL.md format, same agent compatibility
+
+## What's new
+
+| Capability | npx skills | skillrank |
+|---|---|---|
+| Install a skill | ✅ | ✅ (uses npx skills) |
+| Install a curated bundle | ❌ | ✅ Stacks |
+| Quality scoring | ❌ | ✅ Bench |
+| Cross-agent diff | ❌ | ✅ Sync |
+| Conflict detection | ❌ | ✅ Bench |
+| Interactive stack builder | ❌ | ✅ Create |
+
+## Quick migration
+
+You don't need to migrate anything. Just install skillrank alongside:
+
+```bash
+npm install -g skillrank
+```
+
+Then start using the features you want:
+
+```bash
+# See what you have
+skillrank list --agents
+
+# Score your existing skills
+export ANTHROPIC_API_KEY="sk-ant-..."
+skillrank bench
+
+# Audit across agents
+skillrank sync --dry-run
+```
+
+## Common workflows
+
+### Bundle your existing skills
+
+Turn your collection into a shareable stack:
+
+```bash
+skillrank create
+```
+
+Pick the skills you want to bundle. Outputs a `skillrank.yaml`.
+
+```bash
+skillrank publish
+```
+
+Now others can install your exact setup with one command.
+
+### Quality-check skills before installing
+
+When you find a new skill on GitHub:
+
+```bash
+# Install it
+npx skills add user/repo --skill new-skill
+
+# Test if it actually helps
+skillrank score new-skill
+```
+
+If the score is weak, uninstall before it pollutes your workflow.
+
+### Share a verified stack
+
+```bash
+# Build the stack
+skillrank create
+
+# Benchmark to verify quality
+skillrank bench --md
+
+# Commit and publish
+git add skillrank.yaml bench-report.md
+git commit -m "feat: verified stack with bench scores"
+skillrank publish
+```
+
+Now your published stack comes with proof of quality.
+
+## FAQ
+
+<AccordionGroup>
+  <Accordion title="Does skillrank replace npx skills?">
+    No. skillrank shells out to `npx skills` for installs. It's a complementary tool, not a replacement.
+  </Accordion>
+  
+  <Accordion title="Will my existing skills work?">
+    Yes. skillrank detects all skills installed by `npx skills`, your coding agent, or manually.
+  </Accordion>
+  
+  <Accordion title="Can I use both at the same time?">
+    Yes. You can `npx skills add` and `skillrank install` interchangeably.
+  </Accordion>
+  
+  <Accordion title="What about lockfiles?">
+    skillrank writes its own `skillrank-lock.json` for stacks. `npx skills` has its own lock mechanism. They don't conflict.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,144 @@
+---
+title: "Quickstart"
+description: "Your first stack, your first bench, in 5 minutes."
+---
+
+This guide walks you through skillrank's three core features using a real example.
+
+## 1. See what you have
+
+```bash
+skillrank list --agents
+```
+
+This scans your machine for installed coding agents and shows their skills:
+
+```
+Detected agents
+  [claude-code]  3 skill(s)
+    • frontend-design — Create polished frontend components
+    • api-testing — Write tests using Jest and Supertest
+    • docx — Create and edit Word documents
+```
+
+## 2. Install a stack
+
+A **stack** is a curated bundle of skills defined in a `skillrank.yaml` file, hosted on GitHub.
+
+```bash
+skillrank install darcy2002/nextjs-starter
+```
+
+Behind the scenes, skillrank:
+1. Fetches the `skillrank.yaml` from the GitHub repo
+2. Parses the list of skills
+3. Installs each one to your detected agents
+4. Writes a lock file for reproducibility
+
+<Tip>
+  See [how to create your own stack](/stacks/creating-a-stack) to build and publish one.
+</Tip>
+
+## 3. Benchmark your skills
+
+This is the killer feature. Bench tells you whether your installed skills actually improve agent output.
+
+```bash
+skillrank bench
+```
+
+The pipeline:
+
+<Steps>
+  <Step title="Scan">
+    Find all installed SKILL.md files across all agents.
+  </Step>
+  <Step title="Generate tasks">
+    Use Claude API to generate 3 realistic test prompts per skill from its description.
+  </Step>
+  <Step title="Dual execution">
+    Run each prompt twice — once with the skill injected in the system prompt, once without.
+  </Step>
+  <Step title="Blind grade">
+    Send both outputs to Claude as a judge (order randomized to prevent bias). Score each 0-100.
+  </Step>
+  <Step title="Report">
+    Render a scorecard showing the delta between "with skill" and "without skill" scores.
+  </Step>
+</Steps>
+
+Sample output:
+
+```
+Skill                Score    Δ vs raw   Status
+─────────────────────────────────────────────────
+frontend-design      92/100   +41        ✅ Strong
+api-testing          78/100   +22        ✅ Good
+old-webpack-config   31/100   -2         ❌ Broken
+─────────────────────────────────────────────────
+Tokens: 48,200  ·  Cost: ~$0.14
+```
+
+<Tip>
+  Skills with a **positive delta** are genuinely helping the agent. Skills with a **negative or zero delta** are useless or actively harmful — remove them.
+</Tip>
+
+## 4. Sync across agents
+
+If you use multiple coding agents (e.g., Claude Code at work, Cursor at home), skills can get out of sync.
+
+```bash
+skillrank sync --dry-run
+```
+
+Shows a diff matrix:
+
+```
+┌──────────────────┬────────┬────────┬───────┐
+│ Skill            │ Claude │ Cursor │ Codex │
+├──────────────────┼────────┼────────┼───────┤
+│ frontend-design  │ ✔      │ ✔      │ ✖     │
+│ api-testing      │ ✔      │ ⚠      │ ✔     │
+│ docx             │ ✔      │ ✖      │ ✖     │
+└──────────────────┴────────┴────────┴───────┘
+  ✔ synced   ⚠ outdated   ✖ missing
+```
+
+Remove `--dry-run` to actually reconcile (you'll be prompted before any writes).
+
+## 5. Create your own stack
+
+Use the interactive wizard:
+
+```bash
+skillrank create
+```
+
+It walks you through naming, picking skills, choosing target agents, and writes a `skillrank.yaml` file. Then publish:
+
+```bash
+skillrank publish
+```
+
+Now anyone can install your stack with:
+
+```bash
+skillrank install your-username/your-stack
+```
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Full command reference" icon="terminal" href="/commands/install">
+    Every command, every flag, every option.
+  </Card>
+  <Card title="How bench works" icon="microscope" href="/bench/how-it-works">
+    Deep dive into the bench pipeline and scoring methodology.
+  </Card>
+  <Card title="skillrank.yaml reference" icon="file-code" href="/stacks/yaml-reference">
+    Full schema for the stack manifest file.
+  </Card>
+  <Card title="CI/CD integration" icon="rotate" href="/guides/ci-integration">
+    Bench skills automatically on every PR.
+  </Card>
+</CardGroup>

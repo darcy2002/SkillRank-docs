@@ -1,0 +1,129 @@
+---
+title: "Publishing"
+description: "Make your stack discoverable and trusted."
+---
+
+Once you've created and tested a stack, publishing well makes the difference between 5 installs and 5,000.
+
+## The discovery loop
+
+```
+Great README → people see it on GitHub
+Bench report → people trust it
+Distinctive name → people remember it
+Tagged release → people pin to it
+Twitter share → people find it
+```
+
+Skip any of these and you lose a chunk of the funnel.
+
+## Repo structure
+
+A well-structured stack repo looks like:
+
+```
+nextjs-starter/
+├── README.md                 # The sales pitch
+├── skillrank.yaml           # The manifest
+├── skillrank-lock.json      # Locked versions (commit this)
+├── bench-report.md           # Quality proof
+├── LICENSE                   # MIT recommended
+└── CHANGELOG.md              # What changed between versions
+```
+
+## Naming
+
+- **Good**: `nextjs-starter`, `python-backend`, `devops-essentials`
+- **Bad**: `my-stack`, `awesome-skills`, `deepak-tools`
+
+Names should be **descriptive** and **searchable**. Someone looking for Next.js skills should be able to find your stack.
+
+## Versioning
+
+Tag releases with semver:
+
+```bash
+git tag v1.0.0
+git push --tags
+```
+
+Users can then pin:
+
+```bash
+skillrank install darcy2002/nextjs-starter@v1.0.0
+```
+
+Bump versions when:
+
+- **PATCH** (1.0.1) — Bug fix in a skill, no skill added/removed
+- **MINOR** (1.1.0) — New skill added, no breaking changes
+- **MAJOR** (2.0.0) — Skill removed or breaking change in skill behavior
+
+## README template
+
+````markdown
+# stack-name
+
+> One-sentence description that makes someone want to install it.
+
+![bench score](https://img.shields.io/badge/bench-92%2F100-success)
+![skills](https://img.shields.io/badge/skills-8-blue)
+
+## What's included
+
+| Skill | Score | Purpose |
+|---|---|---|
+| frontend-design | 92/100 | Polished UI components |
+| react-best-practices | 88/100 | Modern React patterns |
+
+## Install
+
+```bash
+npx skillrank install your-username/stack-name
+```
+
+## Why this stack?
+
+[3-4 sentences on the use case and what makes it different]
+
+## Bench report
+
+See [bench-report.md](./bench-report.md) for full quality scores.
+
+## License
+
+MIT
+````
+
+## Promotion checklist
+
+After publishing:
+
+- [ ] Post the bench report screenshot on Twitter/X with `#agentskills`
+- [ ] Submit to `r/ClaudeAI` with the install command
+- [ ] Add to [awesome-agent-skills](https://github.com/topics/awesome-agent-skills)
+- [ ] Mention on relevant Discord servers (Anthropic, Cursor, etc.)
+- [ ] Write a blog post about the workflow your stack supports
+
+## Trust signals
+
+What makes developers actually install a stack:
+
+1. **A bench report** — proof that skills work
+2. **A clear use case** — "for Next.js dev" beats "for development"
+3. **An active maintainer** — recent commits, responsive issues
+4. **Real examples** — link to projects built with the stack
+5. **Recognizable name** — your handle or company
+
+## Stay updated
+
+Skills evolve. Set a reminder to re-bench your stack quarterly and bump versions when you update skills.
+
+```bash
+# Quarterly maintenance
+skillrank bench --md
+git add bench-report.md skillrank-lock.json
+git commit -m "chore: quarterly bench update"
+git tag v1.1.0
+git push --tags
+```
