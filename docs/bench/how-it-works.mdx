@@ -3,7 +3,7 @@ title: "How Bench Works"
 description: "Deep dive into the bench pipeline and scoring methodology."
 ---
 
-Bench is the feature that differentiates skillrank. This page explains exactly how it scores your skills — what's measured, how it's measured, and why it's trustworthy.
+Bench is the feature that differentiates skillrank. This page explains exactly how it scores your skills what's measured, how it's measured, and why it's trustworthy.
 
 ## The pipeline
 
@@ -20,10 +20,10 @@ Bench is the feature that differentiates skillrank. This page explains exactly h
 skillrank walks your detected agent skill directories and parses every `SKILL.md` file. Same skill installed in multiple agents = one entry (deduplicated by name).
 
 For each skill, it extracts:
-- **Name** — from YAML frontmatter
-- **Description** — from YAML frontmatter
-- **Body** — the markdown instructions
-- **Content hash** — for change detection
+- **Name** from YAML frontmatter
+- **Description** from YAML frontmatter
+- **Body** the markdown instructions
+- **Content hash** for change detection
 
 ## Step 2: Generate test prompts
 
@@ -46,7 +46,7 @@ The quality of these prompts depends entirely on your skill's description. **Vag
 
 For each generated prompt, bench makes two API calls **in parallel**:
 
-### Call A — WITH skill
+### Call A WITH skill
 
 ```json
 {
@@ -55,7 +55,7 @@ For each generated prompt, bench makes two API calls **in parallel**:
 }
 ```
 
-### Call B — WITHOUT skill
+### Call B WITHOUT skill
 
 ```json
 {
@@ -68,7 +68,7 @@ Both calls use `temperature: 0` for deterministic outputs. The same model is use
 
 ## Step 4: Blind grading
 
-Both outputs are sent to Claude as a judge — but with a critical detail: **the order is randomized.**
+Both outputs are sent to Claude as a judge but with a critical detail: **the order is randomized.**
 
 ```json
 {
@@ -91,7 +91,7 @@ score_without = average of all "without skill" scores
 delta = score_with_skill - score_without
 ```
 
-The final score in the report is `score_with_skill`. The delta is the most important number — it measures the skill's **incremental value**.
+The final score in the report is `score_with_skill`. The delta is the most important number it measures the skill's **incremental value**.
 
 ## Why this methodology
 
@@ -122,11 +122,11 @@ The final score in the report is `score_with_skill`. The delta is the most impor
 Bench is a useful signal, not absolute truth:
 
 - **Skill descriptions drive test quality.** A poorly described skill will be tested poorly.
-- **Scores are relative, not absolute.** A 90 doesn't mean "perfect" — it means "much better than no skill."
+- **Scores are relative, not absolute.** A 90 doesn't mean "perfect" it means "much better than no skill."
 - **Domain-specific skills score lower.** Highly specialized skills generate fewer realistic test prompts.
 - **Single judge model.** Future versions may support multi-judge consensus for higher reliability.
 
 ## What's next
 
-- [Reading the scorecard](/bench/scorecard) — How to interpret results and act on them
-- [Cost & performance](/bench/costs) — How much bench costs and how to speed it up
+- [Reading the scorecard](/bench/scorecard) How to interpret results and act on them
+- [Cost & performance](/bench/costs) How much bench costs and how to speed it up

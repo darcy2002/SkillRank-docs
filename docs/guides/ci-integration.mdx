@@ -74,7 +74,7 @@ jobs:
     Create `.github/workflows/bench.yml` with the YAML above.
   </Step>
   <Step title="Commit and push">
-    Open a PR that changes a SKILL.md — you'll see the bench report comment automatically.
+    Open a PR that changes a SKILL.md you'll see the bench report comment automatically.
   </Step>
 </Steps>
 
@@ -114,10 +114,10 @@ bench:
 
 CI bench runs add up. To keep costs in check:
 
-- **Bench only on PRs that touch skills** — use `paths` filters
-- **Use Haiku for grading in CI** — `--grader-model claude-haiku-4-5-20251001`
-- **Reduce tasks in CI** — `--tasks 1` for fast feedback, full `--tasks 3` on main
-- **Don't bench on every commit** — limit to PR events
+- **Bench only on PRs that touch skills** use `paths` filters
+- **Use Haiku for grading in CI** `--grader-model claude-haiku-4-5-20251001`
+- **Reduce tasks in CI** `--tasks 1` for fast feedback, full `--tasks 3` on main
+- **Don't bench on every commit** limit to PR events
 
 A typical stack with 10 skills running on each PR costs:
 
@@ -152,6 +152,6 @@ If scores drop, open an issue automatically:
 
 ## Related
 
-- [`skillrank bench`](/commands/bench) — Full bench command reference
-- [Cost & performance](/bench/costs) — Optimize CI bench costs
-- [Publishing best practices](/stacks/publishing) — Include bench results in your stack
+- [`skillrank bench`](/commands/bench) Full bench command reference
+- [Cost & performance](/bench/costs) Optimize CI bench costs
+- [Publishing best practices](/stacks/publishing) Include bench results in your stack

@@ -3,22 +3,12 @@ title: "skillrank"
 description: "The quality layer for AI agent skills. Test, bundle, and sync skills across every coding agent."
 ---
 
-<img
-  className="block dark:hidden"
-  src="/images/hero-light.png"
-  alt="skillrank hero"
-/>
-<img
-  className="hidden dark:block"
-  src="/images/hero-dark.png"
-  alt="skillrank hero"
-/>
 
 **skillrank** is a CLI tool that adds three layers on top of the open agent skills ecosystem:
 
-- **Stacks** — Curated, shareable bundles of skills installed with one command
-- **Bench** — Automated quality scoring for every skill you install
-- **Sync** — Cross-agent audit and reconciliation across Claude Code, Cursor, Codex, and more
+- **Stacks** Curated, shareable bundles of skills installed with one command
+- **Bench** Automated quality scoring for every skill you install
+- **Sync** Cross-agent audit and reconciliation across Claude Code, Cursor, Codex, and more
 
 ```bash
 npx skillrank bench
@@ -26,14 +16,14 @@ npx skillrank bench
 
 ## Why skillrank?
 
-The agent skills ecosystem exploded in 2026 — 26+ platforms adopted the open SKILL.md standard, and thousands of skills now exist. But three problems plague developers using them:
+The agent skills ecosystem exploded in 2026 26+ platforms adopted the open SKILL.md standard, and thousands of skills now exist. But three problems plague developers using them:
 
 <CardGroup cols={3}>
   <Card title="No bundles" icon="box">
     Installing 8 skills takes 8 separate commands. No way to share a curated set.
   </Card>
   <Card title="Zero quality signals" icon="circle-question">
-    Thousands of skills published — no way to know which actually help vs. break.
+    Thousands of skills published no way to know which actually help vs. break.
   </Card>
   <Card title="Agent fragmentation" icon="shuffle">
     Skills installed in Claude Code but not Cursor. Different versions everywhere.
@@ -81,6 +71,6 @@ The agent skills ecosystem exploded in 2026 — 26+ platforms adopted the open S
 
 ## Built for the open standard
 
-skillrank is built on the agent skills open standard ([agentskills.io](https://agentskills.io)) and works with every compliant tool — Claude Code, Codex, Cursor, GitHub Copilot, Gemini CLI, Windsurf, Kiro, OpenCode, Roo, Amp, and more.
+skillrank is built on the agent skills open standard ([agentskills.io](https://agentskills.io)) and works with every compliant tool Claude Code, Codex, Cursor, GitHub Copilot, Gemini CLI, Windsurf, Kiro, OpenCode, Roo, Amp, and more.
 
-We don't reinvent install logic — we shell out to [`npx skills`](https://github.com/vercel-labs/agent-skills) for that. We focus on the layers that don't exist yet: quality, composition, and cross-agent reconciliation.
+We don't reinvent install logic we shell out to [`npx skills`](https://github.com/vercel-labs/agent-skills) for that. We focus on the layers that don't exist yet: quality, composition, and cross-agent reconciliation.

@@ -16,9 +16,9 @@ This scans your machine for installed coding agents and shows their skills:
 ```
 Detected agents
   [claude-code]  3 skill(s)
-    • frontend-design — Create polished frontend components
-    • api-testing — Write tests using Jest and Supertest
-    • docx — Create and edit Word documents
+    • frontend-design Create polished frontend components
+    • api-testing Write tests using Jest and Supertest
+    • docx Create and edit Word documents
 ```
 
 ## 2. Install a stack
@@ -57,7 +57,7 @@ The pipeline:
     Use Claude API to generate 3 realistic test prompts per skill from its description.
   </Step>
   <Step title="Dual execution">
-    Run each prompt twice — once with the skill injected in the system prompt, once without.
+    Run each prompt twice once with the skill injected in the system prompt, once without.
   </Step>
   <Step title="Blind grade">
     Send both outputs to Claude as a judge (order randomized to prevent bias). Score each 0-100.
@@ -80,7 +80,7 @@ Tokens: 48,200  ·  Cost: ~$0.14
 ```
 
 <Tip>
-  Skills with a **positive delta** are genuinely helping the agent. Skills with a **negative or zero delta** are useless or actively harmful — remove them.
+  Skills with a **positive delta** are genuinely helping the agent. Skills with a **negative or zero delta** are useless or actively harmful remove them.
 </Tip>
 
 ## 4. Sync across agents

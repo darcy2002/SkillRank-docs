@@ -62,7 +62,7 @@ skillrank install darcy2002/nextjs-starter -a claude-code cursor
 
 ## How it works
 
-skillrank doesn't reimplement skill installation — it shells out to [`npx skills`](https://www.npmjs.com/package/skills) for each skill in the stack. For each entry, it runs:
+skillrank doesn't reimplement skill installation it shells out to [`npx skills`](https://www.npmjs.com/package/skills) for each skill in the stack. For each entry, it runs:
 
 ```bash
 npx skills add <source> --skill <name> -a <agent> -y
@@ -93,6 +93,6 @@ Commit this file to your repo so teammates get the exact same skill versions.
 
 ## Related
 
-- [`skillrank create`](/commands/create) — Build your own stack interactively
-- [`skillrank publish`](/commands/publish) — Push your stack to GitHub
-- [skillrank.yaml reference](/stacks/yaml-reference) — Full manifest schema
+- [`skillrank create`](/commands/create) Build your own stack interactively
+- [`skillrank publish`](/commands/publish) Push your stack to GitHub
+- [skillrank.yaml reference](/stacks/yaml-reference) Full manifest schema

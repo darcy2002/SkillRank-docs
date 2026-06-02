@@ -63,7 +63,7 @@
       "anchors": [
         {
           "anchor": "GitHub",
-          "href": "https://github.com/darcy2002/SkillRank",
+          "href": "https://github.com/darcy2002/SkillStack",
           "icon": "github"
         },
         {
@@ -82,7 +82,7 @@
     "links": [
       {
         "label": "Issues",
-        "href": "https://github.com/darcy2002/SkillRank/issues"
+        "href": "https://github.com/darcy2002/SkillStack/issues"
       }
     ],
     "primary": {
@@ -93,7 +93,7 @@
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/darcy2002/SkillRank",
+      "github": "https://github.com/darcy2002/SkillStack",
       "x": "https://x.com/darcy2002"
     }
   }

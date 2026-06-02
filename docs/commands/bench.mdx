@@ -1,6 +1,6 @@
 ---
 title: "bench"
-description: "Benchmark installed skills — score quality, find conflicts, identify broken skills."
+description: "Benchmark installed skills score quality, find conflicts, identify broken skills."
 ---
 
 ```bash
@@ -62,7 +62,7 @@ Model: claude-sonnet-4-6   Tokens: 32,400   Est. cost: $0.10
 </ParamField>
 
 <ParamField path="--md">
-  Also write a `bench-report.md` file — designed to be shareable on GitHub or Twitter.
+  Also write a `bench-report.md` file designed to be shareable on GitHub or Twitter.
 </ParamField>
 
 ## Output files
@@ -71,7 +71,7 @@ Two artifacts are generated:
 
 ### `bench-report.json`
 
-Full structured data — every prompt, every score, every reasoning string. Useful for tracking quality over time or building dashboards.
+Full structured data every prompt, every score, every reasoning string. Useful for tracking quality over time or building dashboards.
 
 ```json
 {
@@ -113,14 +113,14 @@ Markdown table with emoji status indicators. Screenshot-friendly. Designed to be
 |---|---|
 | ✅ Strong | Score 80+, big positive delta. Skill is genuinely useful. |
 | ✅ Good | Score 60-80, positive delta. Skill helps but could be tighter. |
-| ⚠️ Weak | Score 40-60, small or zero delta. Marginal value — consider revising. |
-| ❌ Broken | Score below 40 or negative delta. Skill is useless or harmful — remove it. |
+| ⚠️ Weak | Score 40-60, small or zero delta. Marginal value consider revising. |
+| ❌ Broken | Score below 40 or negative delta. Skill is useless or harmful remove it. |
 
 The **delta** is the most important number. It's `score_with_skill - score_without_skill`. A delta of `+41` means the skill genuinely improved the output. A delta of `-2` means it actively made things worse.
 
 ## Conflicts
 
-Bench also detects keyword overlap between skills. If two skills have descriptions with >40% overlapping keywords, they'll both try to activate on the same prompts — causing the agent to choose one unpredictably.
+Bench also detects keyword overlap between skills. If two skills have descriptions with >40% overlapping keywords, they'll both try to activate on the same prompts causing the agent to choose one unpredictably.
 
 ```
 ⚠ Conflicts detected:
@@ -140,6 +140,6 @@ See [Cost & Performance](/bench/costs) for the full breakdown.
 
 ## Related
 
-- [`skillrank score`](/commands/score) — Quick benchmark of a single skill
-- [How bench works](/bench/how-it-works) — Deep dive into the pipeline
-- [Reading the scorecard](/bench/scorecard) — How to interpret results
+- [`skillrank score`](/commands/score) Quick benchmark of a single skill
+- [How bench works](/bench/how-it-works) Deep dive into the pipeline
+- [Reading the scorecard](/bench/scorecard) How to interpret results

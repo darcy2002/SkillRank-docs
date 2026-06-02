@@ -45,7 +45,7 @@ The bottleneck is API latency, not compute. Each API call is 1-3 seconds; many s
 
 ### Use Haiku for grading
 
-The grading step doesn't need Sonnet's depth — it's a comparison task. Switch to Haiku:
+The grading step doesn't need Sonnet's depth it's a comparison task. Switch to Haiku:
 
 ```bash
 skillrank bench --grader-model claude-haiku-4-5-20251001
@@ -78,7 +78,7 @@ Only that skill runs. Roughly 15 seconds and $0.02.
 In CI, only re-bench skills whose content hash changed:
 
 ```bash
-# Pseudo-script — bench only modified skills
+# Pseudo-script bench only modified skills
 git diff --name-only HEAD~1 -- '**/SKILL.md' | \
   xargs -I {} skillrank score "$(dirname {} | xargs basename)"
 ```
@@ -95,7 +95,7 @@ The Anthropic API has rate limits per tier:
 
 Bench respects rate limits by running calls sequentially within a skill (parallelizing only the dual with/without pair). If you're on Tier 1 with many skills, expect waits.
 
-To upgrade tiers, just add funds to your Anthropic account — even $5 of deposits unlocks Tier 2.
+To upgrade tiers, just add funds to your Anthropic account even $5 of deposits unlocks Tier 2.
 
 ## Model selection
 
@@ -111,9 +111,9 @@ skillrank bench --model claude-opus-4-6
 
 Recommendations:
 
-- **Iterating on a skill**: Haiku for both — fast feedback
-- **Auditing your full stack**: Sonnet for testing, Haiku for grading — balanced
-- **Publishing a stack publicly**: Sonnet for both — highest reliability
+- **Iterating on a skill**: Haiku for both fast feedback
+- **Auditing your full stack**: Sonnet for testing, Haiku for grading balanced
+- **Publishing a stack publicly**: Sonnet for both highest reliability
 
 ## Comparing costs to alternatives
 
@@ -128,6 +128,6 @@ For the cost of a piece of gum per skill, you get a quantitative quality signal 
 
 ## Related
 
-- [How bench works](/bench/how-it-works) — Technical pipeline
-- [Reading the scorecard](/bench/scorecard) — Interpreting results
-- [`skillrank score`](/commands/score) — Single-skill bench for iteration
+- [How bench works](/bench/how-it-works) Technical pipeline
+- [Reading the scorecard](/bench/scorecard) Interpreting results
+- [`skillrank score`](/commands/score) Single-skill bench for iteration

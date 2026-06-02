@@ -46,10 +46,10 @@ Walks you through fixing each mismatch.
   </Step>
   <Step title="Compute diff">
     For each skill, determines its status per agent:
-    - **synced** — Present with the same content hash
-    - **outdated** — Present but with a different hash
-    - **missing** — Not installed in this agent
-    - **only-here** — Only exists in one agent
+    - **synced** Present with the same content hash
+    - **outdated** Present but with a different hash
+    - **missing** Not installed in this agent
+    - **only-here** Only exists in one agent
   </Step>
   <Step title="Reconcile">
     Interactively prompts you to fix mismatches. Copies SKILL.md files (or converts to `.mdc` for Cursor / `.md` for Windsurf) to fill gaps.
@@ -84,5 +84,5 @@ Sync handles these conversions automatically.
 
 ## Related
 
-- [`skillrank list`](/commands/list) — Just see what's installed, no diff
-- [Multi-agent setup guide](/guides/from-npx-skills) — Best practices for using multiple agents
+- [`skillrank list`](/commands/list) Just see what's installed, no diff
+- [Multi-agent setup guide](/guides/from-npx-skills) Best practices for using multiple agents
